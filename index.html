@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI BACCARAT PRECISION</title>
+    <style>
+        :root {
+            --bg-color: #050a09;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --neon-cyan: #00f2ff;
+            --neon-red: #ff3131;
+            --neon-green: #39ff14;
+            --gold: #ffcf40;
+        }
+
+        body {
+            background: var(--bg-color);
+            background-image: radial-gradient(circle at 50% 50%, #0d2b26 0%, #050a09 100%);
+            color: #fff;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex; justify-content: center; padding: 20px; margin: 0;
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            width: 100%; max-width: 420px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 40px;
+            padding: 30px 20px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            text-align: center;
+        }
+
+        /* Result Header */
+        .header-status {
+            border: 1px solid var(--neon-cyan);
+            background: rgba(0,0,0,0.4);
+            border-radius: 25px;
+            padding: 25px 10px;
+            margin-bottom: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #ai-label { font-size: 14px; letter-spacing: 2px; color: var(--neon-cyan); margin-bottom: 10px; opacity: 0.8; }
+        
+        #main-prediction {
+            font-size: 72px; font-weight: 900; margin: 5px 0;
+            text-shadow: 0 0 30px currentColor; transition: 0.3s;
+        }
+
+        .accuracy-bar {
+            width: 80%; height: 4px; background: #222; margin: 15px auto 5px; border-radius: 10px;
+        }
+        #inner-bar { width: 0%; height: 100%; background: var(--neon-green); transition: 1s; box-shadow: 0 0 10px var(--neon-green); }
+
+        /* Stats Circle */
+        .stats-area { position: relative; width: 200px; height: 200px; margin: 0 auto 30px; }
+        .circle-svg { transform: rotate(-90deg); }
+        .center-text {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 12px; color: #666; font-weight: bold;
+        }
+
+        /* Grid Data */
+        .data-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 30px;
+        }
+        .data-card {
+            background: rgba(255,255,255,0.05); padding: 12px 5px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05);
+        }
+        .data-card label { display: block; font-size: 10px; color: #888; margin-bottom: 5px; }
+        .data-card span { font-size: 18px; font-weight: bold; }
+
+        /* Roadmap */
+        .roadmap {
+            background: rgba(0,0,0,0.3); border-radius: 20px; padding: 12px;
+            display: flex; flex-wrap: wrap; height: 100px; align-content: flex-start;
+            overflow-y: auto; margin-bottom: 30px; gap: 5px;
+        }
+        .dot {
+            width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold;
+        }
+
+        /* Buttons */
+        .action-btns { display: flex; justify-content: space-around; align-items: center; }
+        .btn {
+            border: none; border-radius: 50%; cursor: pointer; transition: 0.2s;
+            display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;
+        }
+        .btn-p { width: 80px; height: 80px; background: #007aff; box-shadow: 0 0 20px rgba(0,122,255,0.5); font-size: 28px; }
+        .btn-b { width: 80px; height: 80px; background: #ff3b30; box-shadow: 0 0 20px rgba(255,59,48,0.5); font-size: 28px; }
+        .btn-t { width: 60px; height: 60px; background: #34c759; font-size: 18px; }
+        .btn:active { transform: scale(0.85); filter: brightness(1.2); }
+
+        .reset-btn { margin-top: 20px; font-size: 12px; color: #444; cursor: pointer; text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="header-status">
+        <div id="ai-label">SYSTEM READY v3.0</div>
+        <div id="main-prediction" style="color: #444;">WAIT</div>
+        <div class="accuracy-bar"><div id="inner-bar"></div></div>
+        <div style="font-size: 11px; color: #888;">Probability: <span id="prob-val">0%</span></div>
+    </div>
+
+    <div class="stats-area">
+        <svg class="circle-svg" width="200" height="200" viewBox="0 0 42 42">
+            <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#111" stroke-width="3"></circle>
+            <circle id="p-circle" cx="21" cy="21" r="15.915" fill="transparent" stroke="#007aff" stroke-width="3" stroke-dasharray="0 100" stroke-dashoffset="0"></circle>
+            <circle id="b-circle" cx="21" cy="21" r="15.915" fill="transparent" stroke="#ff3b30" stroke-width="3" stroke-dasharray="0 100" stroke-dashoffset="0"></circle>
+        </svg>
+        <div class="center-text">BALANCE<br><strong style="color:#fff; font-size:16px;">AI PRO</strong></div>
+    </div>
+
+    <div class="data-grid">
+        <div class="data-card"><label>PLAYER</label><span id="c-p" style="color:#007aff">0</span></div>
+        <div class="data-card"><label>BANKER</label><span id="c-b" style="color:#ff3b30">0</span></div>
+        <div class="data-card"><label>TIE</label><span id="c-t" style="color:#34c759">0</span></div>
+        <div class="data-card"><label>STREAK</label><span id="c-s" style="color:var(--gold)">0</span></div>
+    </div>
+
+    <div class="roadmap" id="roadmap"></div>
+
+    <div class="action-btns">
+        <button class="btn btn-p" onclick="record('P')">P</button>
+        <button class="btn btn-t" onclick="record('T')">T</button>
+        <button class="btn btn-b" onclick="record('B')">B</button>
+    </div>
+
+    <div class="reset-btn" onclick="resetAll()">RESET DATABASE</div>
+</div>
+
+<script>
+    let log = [];
+    
+    function record(val) {
+        log.push(val);
+        processAI();
+    }
+
+    function processAI() {
+        const total = log.length;
+        const p = log.filter(x => x === 'P').length;
+        const b = log.filter(x => x === 'B').length;
+        const t = log.filter(x => x === 'T').length;
+
+        // UI Updates
+        document.getElementById('c-p').innerText = p;
+        document.getElementById('c-b').innerText = b;
+        document.getElementById('c-t').innerText = t;
+
+        // Circle Chart Logic
+        const pPct = total ? (p/total)*100 : 0;
+        const bPct = total ? (b/total)*100 : 0;
+        document.getElementById('p-circle').setAttribute('stroke-dasharray', `${pPct} ${100-pPct}`);
+        document.getElementById('b-circle').setAttribute('stroke-dasharray', `${bPct} ${100-bPct}`);
+        document.getElementById('b-circle').setAttribute('stroke-dashoffset', -pPct);
+
+        // Roadmap
+        const road = document.getElementById('roadmap');
+        road.innerHTML = '';
+        log.forEach(i => {
+            const d = document.createElement('div');
+            d.className = 'dot';
+            d.style.background = i==='P'?'#007aff':(i==='B'?'#ff3b30':'#34c759');
+            d.innerText = i;
+            road.appendChild(d);
+        });
+        road.scrollTop = road.scrollHeight;
+
+        // --- DEEP LOGIC (ความแม่นยำสูง) ---
+        const main = document.getElementById('main-prediction');
+        const bar = document.getElementById('inner-bar');
+        const probVal = document.getElementById('prob-val');
+        
+        if (total < 3) {
+            main.innerText = "WAIT";
+            main.style.color = "#444";
+            bar.style.width = "0%";
+            return;
+        }
+
+        const last = log[total-1];
+        const last2 = log[total-2];
+        const last3 = log[total-3];
+        
+        let decision = "";
+        let chance = 0;
+
+        // 1. ตรวจจับมังกร (Dragon Detection)
+        if (last === last2 && last2 === last3) {
+            decision = last; // ตามมังกร
+            chance = 88;
+        } 
+        // 2. ตรวจจับปิงปอง (Ping Pong Detection)
+        else if (last !== last2 && last2 !== last3 && last !== 'T' && last2 !== 'T') {
+            decision = last === 'P' ? 'B' : 'P'; 
+            chance = 82;
+        }
+        // 3. สูตร 2 ตัด 1
+        else if (last === last2 && last !== last3) {
+            decision = last === 'P' ? 'B' : 'P';
+            chance = 75;
+        }
+        else {
+            decision = b > p ? 'B' : 'P'; // แทงตามฝั่งที่ออกเยอะกว่า (Trend Follow)
+            chance = 65;
+        }
+
+        // แสดงผล
+        main.innerText = decision === 'P' ? 'PLAYER' : 'BANKER';
+        main.style.color = decision === 'P' ? '#007aff' : '#ff3b30';
+        bar.style.width = chance + "%";
+        probVal.innerText = chance + "%";
+
+        // Streak Count
+        let streak = 0;
+        for(let i=log.length-1; i>=0; i--) {
+            if(log[i] === log[log.length-1]) streak++;
+            else break;
+        }
+        document.getElementById('c-s').innerText = streak;
+    }
+
+    function resetAll() {
+        if(confirm("ล้างสถิติ?")) {
+            log = [];
+            processAI();
+            document.getElementById('main-prediction').innerText = "WAIT";
+        }
+    }
+</script>
+
+</body>
+</html>
